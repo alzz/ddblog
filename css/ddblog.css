@@ -1,8 +1,9 @@
 #chart {
   width: 1400px;
-  height: 600px;
+  height: 750px;
   clear: both;
   margin: 0 auto;
+  overflow-x: hidden;
 }
 
 #toolbar {

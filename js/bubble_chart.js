@@ -4,7 +4,7 @@
  */
 
 (function ($, Drupal) {
-  //'use strict';
+  'use strict';
 
   Drupal.behaviors.ddblog_bubble_chart = {
     attach: function (context, settings) {
@@ -13,7 +13,7 @@
         function bubbleChart() {
           // Sizing.
           var width = 1400;
-          var height = 600;
+          var height = 750;
 
           // Tooltip for mouseover functionality.
           var tooltip = floatingToolTip('dd3blog_tooltip', 240);
@@ -45,29 +45,30 @@
           };
 
           var severityCenters = {
-            'Emergency': { x: 220, y: height / 2 },
-            'Alert': { x: 375, y: height / 2 },
-            'Critical': { x: 600, y: height / 2 },
-            'Error': { x: 800, y: height / 2 },
-            'Warning': { x: 1000, y: height / 2 },
-            'Notice': { x: 1200, y: height / 2 },
-            'Info': { x: 1200, y: height / 2 },
-            'Debug': { x: 1200, y: height / 2 }
+            'Emergency': { x: 250, y: 200 },
+            'Alert': { x: 500, y: 200 },
+            'Critical': { x: 800, y: 200 },
+            'Error': { x: 1100, y: 200 },
+            'Warning': { x: 250, y: 500},
+            'Notice': { x: 500, y: 500},
+            'Info': { x: 800, y: 500},
+            'Debug': { x: 1100, y: 500}
           };
 
-          var severitiesTitleX = {
-            'Emergency': 75,
-            'Alert': 300,
-            'Critical': 600,
-            'Error': 850,
-            'Warning': 1125,
-            'Notice': 1300,
-            'Info': 1300,
-            'Debug': 1300
+          var severitiesTitlePosition = {
+            'Emergency': { x: 150, y: 40 },
+            'Alert': { x: 450, y: 40 },
+            'Critical': { x: 850, y: 40 },
+            'Error': { x: 1200, y: 40 },
+            'Warning': { x: 150, y: 400 },
+            'Notice': { x: 450, y: 400 },
+            'Info': { x: 850, y: 400 },
+            'Debug': { x: 1200, y: 400 }
           };
 
           // @v4 strength to apply to the position forces.
-          var forceStrength = 0.03;
+          var FORCE = 0.03;
+          var forceStrength = FORCE;
 
           // These will be set in create_nodes and create_vis
           var svg = null;
@@ -237,8 +238,12 @@
             return typeCenters[d.type].x;
           }
 
-          function nodeSeverityPos(d) {
+          function nodeSeverityX(d) {
             return severityCenters[d.severity].x;
+          }
+
+          function nodeSeverityY(d) {
+            return severityCenters[d.severity].y;
           }
 
           /*
@@ -251,8 +256,11 @@
             hideTypeTitles();
             hideSeverityTitles();
 
+            forceStrength = FORCE;
+
             // @v4 Reset the 'x' force to draw the bubbles to the center.
             simulation.force('x', d3.forceX().strength(forceStrength).x(center.x));
+            simulation.force('y', d3.forceY().strength(forceStrength).y(height/2));
 
             // @v4 We can reset the alpha value and restart the simulation
             simulation.alpha(1).restart();
@@ -268,8 +276,11 @@
             hideSeverityTitles();
             showTypeTitles();
 
+            forceStrength = FORCE;
+
             // @v4 Reset the 'x' force to draw the bubbles to their type centers
             simulation.force('x', d3.forceX().strength(forceStrength).x(nodeTypePos));
+            simulation.force('y', d3.forceY().strength(forceStrength).y(height/2));
 
             // @v4 We can reset the alpha value and restart the simulation
             simulation.alpha(1).restart();
@@ -279,8 +290,11 @@
             hideTypeTitles();
             showSeverityTitles();
 
+            //forceStrength = 0.1;
+
             // @v4 Reset the 'x' force to draw the bubbles to their severity centers
-            simulation.force('x', d3.forceX().strength(forceStrength).x(nodeSeverityPos));
+            simulation.force('x', d3.forceX().strength(forceStrength).x(nodeSeverityX));
+            simulation.force('y', d3.forceY().strength(forceStrength).y(nodeSeverityY));
 
             // @v4 We can reset the alpha value and restart the simulation
             simulation.alpha(1).restart();
@@ -320,14 +334,14 @@
            * Shows severity title displays.
            */
           function showSeverityTitles() {
-            var severitiesData = d3.keys(severitiesTitleX);
+            var severitiesData = d3.keys(severitiesTitlePosition);
             var severities = svg.selectAll('.severity')
               .data(severitiesData);
 
             severities.enter().append('text')
               .attr('class', 'severity')
-              .attr('x', function (d) { return severitiesTitleX[d]; })
-              .attr('y', 40)
+              .attr('x', function (d) { return severitiesTitlePosition[d].x; })
+              .attr('y', function (d) { return severitiesTitlePosition[d].y })
               .attr('text-anchor', 'middle')
               .text(function (d) { return d; });
           }
