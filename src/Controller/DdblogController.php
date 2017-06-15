@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\ddblog\Controller\DdblogAPIController.
+ * Contains \Drupal\ddblog\Controller\DdblogController.
  */
 
 namespace Drupal\ddblog\Controller;
@@ -13,16 +13,29 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * Class DdblogAPIController.
+ * Class DdblogController.
  *
  * @package Drupal\ddblog\Controller
  */
-class DdblogAPIController extends ControllerBase {
+class DdblogController extends ControllerBase {
+
+  /**
+   * Callback for '/admin/reports/ddblog'.
+   *
+   * @return array
+   */
+  public function overview() {
+    return [
+      '#type' => 'html_tag',
+      '#tag' => 'h1',
+      '#value' => 'DDblog',
+    ];
+  }
 
   /**
    * Callback for '/api/ddblog' API method.
    */
-  public function view(Request $request) {
+  public function api(Request $request) {
     $data = $this->dblog();
 
     return new JsonResponse($data);

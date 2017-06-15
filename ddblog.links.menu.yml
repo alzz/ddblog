@@ -1,0 +1,5 @@
+ddblog.overview:
+  title: 'D3js Log messages'
+  parent: system.admin_reports
+  route_name: ddblog.overview
+  description: 'Show bubble chart events that have recently been logged.'

@@ -1,7 +1,15 @@
+ddblog.overview:
+  path: '/admin/reports/ddblog'
+  defaults:
+    _controller: '\Drupal\ddblog\Controller\DdblogController::overview'
+    _title: 'D3 recent log messages'
+  requirements:
+    _permission: 'access site reports'
+
 ddblog.api:
   path: '/api/ddblog'
   defaults:
-    _controller: '\Drupal\ddblog\Controller\DdblogAPIController::view'
+    _controller: '\Drupal\ddblog\Controller\DdblogController::api'
   methods: [GET]
   requirements:
     _access: 'TRUE'
