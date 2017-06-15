@@ -25,7 +25,8 @@
             y: height / 2
           };
 
-          // @TODO: calcular donde poner cada sección.
+          // @TODO: Calculate positions dinamically and type an severity from
+          // enpoint, could be differents ones (for example custom ones).
           var typeCenters = {
             'access denied': { x: 220, y: height / 2 },
             'cron': { x: 375, y: height / 2 },
@@ -107,7 +108,7 @@
           simulation.stop();
 
           // @v4 scales now have a flattened naming scheme
-          // @TODO: Colos by type.
+          // @TODO: Colos dynamic.
           var fillColor = d3.scaleOrdinal()
             .domain(['access denied', 'cron', 'page not found', 'php', 'system', 'user'])
             .range(['#ee9586', '#9caf84', '#e4b7b2', '#d84b2a', '#beccae', '#7aa25c']);
