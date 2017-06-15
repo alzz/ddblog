@@ -44,6 +44,28 @@
             'user': 1300
           };
 
+          var severityCenters = {
+            'Emergency': { x: 220, y: height / 2 },
+            'Alert': { x: 375, y: height / 2 },
+            'Critical': { x: 600, y: height / 2 },
+            'Error': { x: 800, y: height / 2 },
+            'Warning': { x: 1000, y: height / 2 },
+            'Notice': { x: 1200, y: height / 2 },
+            'Info': { x: 1200, y: height / 2 },
+            'Debug': { x: 1200, y: height / 2 }
+          };
+
+          var severitiesTitleX = {
+            'Emergency': 75,
+            'Alert': 300,
+            'Critical': 600,
+            'Error': 850,
+            'Warning': 1125,
+            'Notice': 1300,
+            'Info': 1300,
+            'Debug': 1300
+          };
+
           // @v4 strength to apply to the position forces.
           var forceStrength = 0.03;
 
@@ -71,8 +93,7 @@
           }
 
           // Here we create a force layout and
-          // @v4 We create a force simulation now and
-          //  add forces to it.
+          // @v4 We create a force simulation now and add forces to it.
           var simulation = d3.forceSimulation()
             .velocityDecay(0.2)
             .force('x', d3.forceX().strength(forceStrength).x(center.x))
@@ -81,10 +102,9 @@
             .on('tick', ticked);
 
           // @v4 Force starts up automatically,
-          //  which we don't want as there aren't any nodes yet.
+          // which we don't want as there aren't any nodes yet.
           simulation.stop();
 
-          // Nice looking colors - no reason to buck the trend
           // @v4 scales now have a flattened naming scheme
           // @TODO: Colos by type.
           var fillColor = d3.scaleOrdinal()
@@ -185,7 +205,7 @@
             // Fancy transition to make bubbles appear, ending with the
             // correct radius.
             bubbles.transition()
-              .duration(2000)
+              .duration(1000)
               .attr('r', function (d) { return d.radius; });
 
             // Set the simulation's nodes to our newly created nodes array.
@@ -217,6 +237,10 @@
             return typeCenters[d.type].x;
           }
 
+          function nodeSeverityPos(d) {
+            return severityCenters[d.severity].x;
+          }
+
           /*
            * Sets visualization in "single group mode".
            * The year labels are hidden and the force layout
@@ -225,6 +249,7 @@
            */
           function groupBubbles() {
             hideTypeTitles();
+            hideSeverityTitles();
 
             // @v4 Reset the 'x' force to draw the bubbles to the center.
             simulation.force('x', d3.forceX().strength(forceStrength).x(center.x));
@@ -234,16 +259,28 @@
           }
           
           /*
-           * Sets visualization in "split by year mode".
+           * Sets visualization in "split by type mode".
            * The year labels are shown and the force layout
            * tick function is set to move nodes to the
            * yearCenter of their data's year.
            */
-          function splitBubbles() {
+          function splitBubblesType() {
+            hideSeverityTitles();
             showTypeTitles();
 
-            // @v4 Reset the 'x' force to draw the bubbles to their year centers
+            // @v4 Reset the 'x' force to draw the bubbles to their type centers
             simulation.force('x', d3.forceX().strength(forceStrength).x(nodeTypePos));
+
+            // @v4 We can reset the alpha value and restart the simulation
+            simulation.alpha(1).restart();
+          }
+
+          function splitBubblesSeverity() {
+            hideTypeTitles();
+            showSeverityTitles();
+
+            // @v4 Reset the 'x' force to draw the bubbles to their severity centers
+            simulation.force('x', d3.forceX().strength(forceStrength).x(nodeSeverityPos));
 
             // @v4 We can reset the alpha value and restart the simulation
             simulation.alpha(1).restart();
@@ -257,6 +294,13 @@
           }
 
           /*
+           * Hides severity title displays.
+           */
+          function hideSeverityTitles() {
+            svg.selectAll('.severity').remove();
+          }
+
+          /*
            * Shows Type title displays.
            */
           function showTypeTitles() {
@@ -267,6 +311,22 @@
             types.enter().append('text')
               .attr('class', 'type')
               .attr('x', function (d) { return typesTitleX[d]; })
+              .attr('y', 40)
+              .attr('text-anchor', 'middle')
+              .text(function (d) { return d; });
+          }
+
+          /*
+           * Shows severity title displays.
+           */
+          function showSeverityTitles() {
+            var severitiesData = d3.keys(severitiesTitleX);
+            var severities = svg.selectAll('.severity')
+              .data(severitiesData);
+
+            severities.enter().append('text')
+              .attr('class', 'severity')
+              .attr('x', function (d) { return severitiesTitleX[d]; })
               .attr('y', 40)
               .attr('text-anchor', 'middle')
               .text(function (d) { return d; });
@@ -315,10 +375,17 @@
            * displayName is expected to be a string and either 'type' or 'all'.
            */
           chart.toggleDisplay = function (displayName) {
-            if (displayName === 'type') {
-              splitBubbles();
-            } else {
-              groupBubbles();
+            switch(displayName) {
+              case 'type':
+                splitBubblesType();
+                break;
+
+              case 'severity':
+                splitBubblesSeverity();
+                break;
+
+              default:
+                groupBubbles();
             }
           };
 

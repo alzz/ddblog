@@ -32,7 +32,7 @@ class DdblogController extends ControllerBase {
     $build['toolbar'] = [
       '#type' => 'html_tag',
       '#tag' => 'div',
-      '#value' => '<a href="#" id="all" class="button active">All</a><a href="#" id="type" class="button">Types</a>',
+      '#value' => '<a href="#" id="all" class="button active">All</a><a href="#" id="type" class="button">Type</a><a href="#" id="severity" class="button">Severity</a>',
       '#attributes' => [ 'id' => ['toolbar'] ],
     ];
 

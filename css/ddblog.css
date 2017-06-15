@@ -9,9 +9,11 @@
   margin-top: 10px;
 }
 
-.type {
-  font-size: 14px;
+.type,
+.severity {
   fill: black;
+  font-size: 14px;
+  font-weight: bold;
   text-transform: uppercase;
   cursor: default;
 }
