@@ -1,0 +1,8 @@
+ddblog.api:
+  path: '/api/ddblog'
+  defaults:
+    _controller: '\Drupal\ddblog\Controller\DdblogAPIController::view'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+# @TODO: use access: 'access site reports'
