@@ -27,10 +27,12 @@ class DdblogController extends ControllerBase {
   public function overview() {
     $build = [];
 
+    // @TODO: render array of buttons.
     $build['toolbar'] = [
       '#type' => 'html_tag',
-      '#tag' => 'h1',
-      '#value' => 'DDblog',
+      '#tag' => 'div',
+      '#value' => '<a href="#" id="all" class="button active">All</a><a href="#" id="type" class="button">Types</a>',
+      '#attributes' => [ 'id' => ['toolbar'] ],
     ];
 
     $build['chart'] = [

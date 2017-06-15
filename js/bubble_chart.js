@@ -12,7 +12,7 @@
 
         function bubbleChart() {
           // Sizing.
-          var width = 940;
+          var width = 1400;
           var height = 600;
 
           // Tooltip for mouseover functionality.
@@ -27,21 +27,21 @@
 
           // @TODO: calcular donde poner cada sección.
           var typeCenters = {
-            access_denied: { x: width / 3, y: height / 2 },
-            cron: { x: width / 2, y: height / 2 },
-            page_not_found: { x: 2 * width / 3, y: height / 2 },
-            php: { x: width / 3, y: height / 2 },
-            system: { x: width / 3, y: height / 2 },
-            user: { x: width / 3, y: height / 2 }
+            'access denied': { x: 220, y: height / 2 },
+            'cron': { x: 375, y: height / 2 },
+            'page not found': { x: 600, y: height / 2 },
+            'php': { x: 800, y: height / 2 },
+            'system': { x: 1000, y: height / 2 },
+            'user': { x: 1200, y: height / 2 }
           };
 
           var typesTitleX = {
-            access_denied: 160,
-            cron: width / 2,
-            page_not_found: width - 160,
-            php: width - 160,
-            system: width - 160,
-            user: width - 160
+            'access denied': 75,
+            'cron': 300,
+            'page not found': 600,
+            'php': 850,
+            'system': 1125,
+            'user': 1300
           };
 
           // @v4 strength to apply to the position forces.
@@ -89,7 +89,7 @@
           // @TODO: Colos by type.
           var fillColor = d3.scaleOrdinal()
             .domain(['access denied', 'cron', 'page not found', 'php', 'system', 'user'])
-            .range(['#d84b2a', '#beccae', '#7aa25c', '#d84b2a', '#beccae', '#7aa25c']);
+            .range(['#ee9586', '#9caf84', '#e4b7b2', '#d84b2a', '#beccae', '#7aa25c']);
 
           /*
            * This data manipulation function takes the raw data from
@@ -175,7 +175,7 @@
               .attr('r', 0)
               .attr('fill', function (d) { return fillColor(d.type); })
               .attr('stroke', function (d) { return d3.rgb(fillColor(d.type)).darker(); })
-              .attr('stroke-width', 2)
+              .attr('stroke-width', 1)
               .on('mouseover', showDetail)
               .on('mouseout', hideDetail);
 
@@ -266,7 +266,7 @@
 
             types.enter().append('text')
               .attr('class', 'type')
-              .attr('x', function (d) { return yearsTitleX[d]; })
+              .attr('x', function (d) { return typesTitleX[d]; })
               .attr('y', 40)
               .attr('text-anchor', 'middle')
               .text(function (d) { return d; });
@@ -373,7 +373,6 @@
 
         // setup the buttons.
         setupButtons();
-
       });
   }};
 
