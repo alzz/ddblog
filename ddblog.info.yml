@@ -1,0 +1,8 @@
+name: ddblog
+type: module
+description: D3js dblog
+package: ddblog
+core: 8.x
+
+dependencies:
+  - dblog
