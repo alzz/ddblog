@@ -25,11 +25,26 @@ class DdblogController extends ControllerBase {
    * @return array
    */
   public function overview() {
-    return [
+    $build = [];
+
+    $build['toolbar'] = [
       '#type' => 'html_tag',
       '#tag' => 'h1',
       '#value' => 'DDblog',
     ];
+
+    $build['chart'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'id' => ['chart'],
+      ],
+    ];
+
+    $build['#attached']['library'][] = 'ddblog/d3';
+    $build['#attached']['library'][] = 'ddblog/ddblog.tooltip';
+    $build['#attached']['library'][] = 'ddblog/ddblog.bubble_chart';
+
+    return $build;
   }
 
   /**
