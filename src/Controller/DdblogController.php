@@ -8,6 +8,7 @@
 namespace Drupal\ddblog\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Component\Utility\Xss;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -67,6 +68,7 @@ class DdblogController extends ControllerBase {
     // @TODO: Inyectar use Drupal\Core\Database\Connection
     // Como en /core/modules/dblog/src/Controller/DbLogController.php
     $output = [];
+    $severity = RfcLogLevel::getLevels();
 
     $query = \Drupal::database()->select('watchdog', 'w');
     $query->addExpression('COUNT(wid)', 'count');
@@ -82,7 +84,7 @@ class DdblogController extends ControllerBase {
       if ($message = $this->formatDblogMessage($dblog)) {
         $output[] = [
           'type' => $dblog->type,
-          'severity' => $dblog->severity,
+          'severity' => $severity[$dblog->severity]->render(),
           'message' => $message,
           'total' => $dblog->count
         ];
