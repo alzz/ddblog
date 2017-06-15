@@ -6,7 +6,7 @@
  * floats on top of visualization.
  */
 
-function floatingTooltip(tooltipId, width) {
+function floatingToolTip(tooltipId, width) {
   // Local variable to hold tooltip div for
   // manipulation in other functions.
   var tt = d3.select('body')

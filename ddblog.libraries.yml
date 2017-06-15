@@ -12,6 +12,9 @@ ddblog.tooltip:
     js/tooltip.js: {}
 
 ddblog.bubble_chart:
+  css:
+    theme:
+      css/ddblog.css: {}
   js:
     js/bubble_chart.js: {}
   dependencies:

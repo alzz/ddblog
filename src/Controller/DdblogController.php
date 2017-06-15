@@ -69,9 +69,10 @@ class DdblogController extends ControllerBase {
     $query = \Drupal::database()->select('watchdog', 'w');
     $query->addExpression('COUNT(wid)', 'count');
     $query = $query
-      ->fields('w', ['type', 'message', 'variables'])
+      ->fields('w', ['type', 'severity', 'message', 'variables'])
       ->groupBy('message')
       ->groupBy('variables')
+      ->groupBy('severity')
       ->groupBy('type');
     $result = $query->execute();
 
@@ -79,6 +80,7 @@ class DdblogController extends ControllerBase {
       if ($message = $this->formatDblogMessage($dblog)) {
         $output[] = [
           'type' => $dblog->type,
+          'severity' => $dblog->severity,
           'message' => $message,
           'total' => $dblog->count
         ];
