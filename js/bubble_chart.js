@@ -55,6 +55,7 @@
           var svg = null;
           var bubbles = null;
           var nodes = [];
+          var fillColor;
 
           // Charge function that is called for each node.
           // As part of the ManyBody force.
@@ -86,12 +87,6 @@
           // @v4 Force starts up automatically,
           // which we don't want as there aren't any nodes yet.
           simulation.stop();
-
-          // @v4 scales now have a flattened naming scheme
-          // @TODO: Colos dynamic.
-          var fillColor = d3.scaleOrdinal()
-            .domain(['access denied', 'cron', 'page not found', 'php', 'system', 'user'])
-            .range(['#ee9586', '#9caf84', '#e4b7b2', '#d84b2a', '#beccae', '#7aa25c']);
 
           /*
            * This data manipulation function takes the raw data from
@@ -154,6 +149,13 @@
           var chart = function chart(selector, rawData) {
             // convert raw data into nodes data
             nodes = createNodes(rawData);
+            
+            var types = [...new Set(rawData.map(item => item.type))];
+            
+            // @TODO: set colour range.
+            fillColor = d3.scaleOrdinal()
+              .domain(types)
+              .range(randomColors(types.length));
 
             // Create a SVG element inside the provided selector
             // with desired size.
@@ -381,6 +383,26 @@
               // the currently clicked button.WWW
               myBubbleChart.toggleDisplay(buttonId);
             });
+        }
+        
+        // Generate array of total random colors.
+        function randomColors(total) {
+          var brightness = 100;
+          var colors = [];
+          
+          function randomChannel() {
+            var r = 255 - brightness;
+            var n = 0 |((Math.random() * r) + brightness);
+            var s = n.toString(16);
+            
+            return (s.length == 1) ? '0' + s : s;
+          }
+          
+          for (var i = 0; i < total; i++) {
+            colors.push('#' + randomChannel(brightness) + randomChannel(brightness) + randomChannel(brightness));
+          }
+          
+          return colors;
         }
 
         // Load the data.
