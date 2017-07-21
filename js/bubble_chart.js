@@ -25,26 +25,6 @@
             y: height / 2
           };
 
-          // @TODO: Calculate positions dinamically and type an severity from
-          // enpoint, could be differents ones (for example custom ones).
-          var typeCenters = {
-            'access denied': { x: 220, y: height / 2 },
-            'cron': { x: 375, y: height / 2 },
-            'page not found': { x: 600, y: height / 2 },
-            'php': { x: 800, y: height / 2 },
-            'system': { x: 1000, y: height / 2 },
-            'user': { x: 1200, y: height / 2 }
-          };
-
-          var typesTitleX = {
-            'access denied': 75,
-            'cron': 300,
-            'page not found': 600,
-            'php': 850,
-            'system': 1125,
-            'user': 1300
-          };
-
           var severityCenters = {
             'Emergency': { x: 250, y: 200 },
             'Alert': { x: 500, y: 200 },
@@ -235,10 +215,6 @@
            * Provides a x value for each node to be used with the split by type
            * x force.
            */
-          function nodeTypePos(d) {
-            return typeCenters[d.type].x;
-          }
-
           function nodeSeverityX(d) {
             return severityCenters[d.severity].x;
           }
@@ -254,7 +230,6 @@
            * center of the visualization.
            */
           function groupBubbles() {
-            hideTypeTitles();
             hideSeverityTitles();
 
             forceStrength = FORCE;
@@ -268,27 +243,12 @@
           }
           
           /*
-           * Sets visualization in "split by type mode".
+           * Sets visualization in "split by severity mode".
            * The year labels are shown and the force layout
            * tick function is set to move nodes to the
            * yearCenter of their data's year.
            */
-          function splitBubblesType() {
-            hideSeverityTitles();
-            showTypeTitles();
-
-            forceStrength = FORCE;
-
-            // @v4 Reset the 'x' force to draw the bubbles to their type centers
-            simulation.force('x', d3.forceX().strength(forceStrength).x(nodeTypePos));
-            simulation.force('y', d3.forceY().strength(forceStrength).y(height/2));
-
-            // @v4 We can reset the alpha value and restart the simulation
-            simulation.alpha(1).restart();
-          }
-
           function splitBubblesSeverity() {
-            hideTypeTitles();
             showSeverityTitles();
 
             //forceStrength = 0.1;
@@ -302,33 +262,10 @@
           }
 
           /*
-           * Hides Type title displays.
-           */
-          function hideTypeTitles() {
-            svg.selectAll('.type').remove();
-          }
-
-          /*
            * Hides severity title displays.
            */
           function hideSeverityTitles() {
             svg.selectAll('.severity').remove();
-          }
-
-          /*
-           * Shows Type title displays.
-           */
-          function showTypeTitles() {
-            var typesData = d3.keys(typesTitleX);
-            var types = svg.selectAll('.type')
-              .data(typesData);
-
-            types.enter().append('text')
-              .attr('class', 'type')
-              .attr('x', function (d) { return typesTitleX[d]; })
-              .attr('y', 40)
-              .attr('text-anchor', 'middle')
-              .text(function (d) { return d; });
           }
 
           /*
@@ -385,16 +322,12 @@
           /*
            * Externally accessible function (this is attached to the
            * returned chart function). Allows the visualization to toggle
-           * between "single group" and "split by type" modes.
+           * between "single group" and "split by severity" modes.
            *
-           * displayName is expected to be a string and either 'type' or 'all'.
+           * displayName is expected to be a string and either 'severity' or 'all'.
            */
           chart.toggleDisplay = function (displayName) {
             switch(displayName) {
-              case 'type':
-                splitBubblesType();
-                break;
-
               case 'severity':
                 splitBubblesSeverity();
                 break;
@@ -445,7 +378,7 @@
               var buttonId = button.attr('id');
 
               // Toggle the bubble chart based on
-              // the currently clicked button.
+              // the currently clicked button.WWW
               myBubbleChart.toggleDisplay(buttonId);
             });
         }
